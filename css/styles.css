@@ -24,3 +24,14 @@ body:has(#auth:not(.hidden)) footer,body:has(#register:not(.hidden)) footer{marg
 .studentnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.studentnav button{flex:1;min-width:110px}.studentnav button.active{background:#10385e}.studentpanel.hidden{display:none!important}.report-table{width:100%;border-collapse:collapse;font-size:.88rem}.report-table th,.report-table td{text-align:left;border-bottom:1px solid #e3e9f1;padding:9px 5px}.bar{height:9px;border-radius:12px;background:#e8edf4;overflow:hidden}.bar>span{display:block;height:100%;background:#2674b7}.report-scroll{overflow-x:auto}.empty{padding:14px;background:#f4f7fb;border-radius:10px}
 
 .admin-profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}.admin-profile-grid button{grid-column:1/-1}.admin-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px;margin:12px 0 20px}#adminReport{border:2px solid #b5d0f2}@media(max-width:600px){.admin-profile-grid{grid-template-columns:1fr}}
+
+/* Administración v1.5: listado de alumnos y ficha con pestañas */
+.student-list-head,.student-list-row{display:grid;grid-template-columns:minmax(155px,1.3fr) minmax(175px,1.5fr) minmax(135px,1fr) minmax(120px,.9fr);gap:12px;align-items:center;padding:14px 12px;text-align:left}
+.student-list-head{font-size:.8rem;font-weight:750;color:#61738a;background:#f2f6fb;border-radius:10px}
+.student-list-row{width:100%;background:#fff;color:#162944;border:0;border-bottom:1px solid #e2e9f2;border-radius:0;font-size:.9rem;font-weight:400}
+.student-list-row:hover,.student-list-row:focus-visible{background:#eef5fd;outline:2px solid #b9d5f2;outline-offset:-2px}
+.student-list-name{font-weight:700;color:#155b9b;text-decoration:underline;text-underline-offset:3px}
+.student-list-email{overflow-wrap:anywhere}.student-list-date{font-variant-numeric:tabular-nums}.student-list-status{font-size:.82rem;color:#51657c}
+.detail-heading{display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-bottom:18px}.detail-tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;border-bottom:1px solid #dce4ee;padding-bottom:12px}.detail-tabs button.active{background:#10385e;color:white}
+.user-permission-row{display:flex;align-items:center;gap:10px;border-bottom:1px solid #e5ebf2;padding:14px 4px}.user-permission-row input{flex:none}.user-access-state{padding:12px;background:#f4f7fb;border-radius:12px;margin-bottom:14px}
+@media(max-width:760px){.student-list-head{display:none}.student-list-row{grid-template-columns:1fr;gap:5px;border:1px solid #dce4ee;border-radius:12px;margin:9px 0}.student-list-email:before{content:'Correo: ';font-weight:650}.student-list-date:before{content:'Último acceso: ';font-weight:650}.student-list-status:before{content:'Estado: ';font-weight:650}}
