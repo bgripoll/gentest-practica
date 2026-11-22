@@ -1,5 +1,17 @@
 # Historial de cambios — GenTest Practica
 
+## [1.1.0] — 2026-11-22
+- Gestión de preguntas por banco: búsqueda, paginación, edición, activación/desactivación.
+- Gestión básica de temas: alta, renombrado y eliminación solo de temas vacíos.
+- Exportación de banco a Excel.
+- Detección de duplicados por enunciado normalizado durante la importación Excel, tanto en archivo como en banco.
+- Eliminación segura de bancos vacíos.
+- Sin migraciones SQL nuevas. Conserva historial de respuestas al desactivar preguntas.
+- Limitación deliberada: no se permite renombrar un tema con preguntas desde esta interfaz sin una operación transaccional; no se borran preguntas con historial.
+- Pruebas: comprobación sintáctica local; pendiente validación con Supabase real.
+
+# Historial de cambios — GenTest Practica
+
 Se adopta [SemVer](https://semver.org/lang/es/) desde la versión **1.0.0**.
 
 ## [1.0.0] — 2026-11-22

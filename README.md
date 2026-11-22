@@ -1,15 +1,22 @@
-# GenTest Practica · v1.9 Centro de control
+# GenTest Practica — versión 1.0.0 (línea base)
 
-Actualización modular desde v1.8. Conserva el registro obligatorio, usuarios, bancos, pruebas, modo alumno y repasos.
+**Fecha de referencia:** 22 de noviembre de 2026.  
+**Estado:** versión base documental para iniciar SemVer; se corresponde funcionalmente con la entrega denominada anteriormente «v1.9».  
+**Importante:** esta renumeración **no introduce nuevas funciones ni cambia la base de datos**. La publicación en GitHub Pages debe realizarse manualmente.
+
+## Archivos de referencia
+- `CHANGELOG.md`: historial a partir de la versión base y reglas de clasificación.
+- `DOCUMENTACION_VERSION_1.0.0.md`: inventario funcional, arquitectura, despliegue, base de datos y limitaciones.
+- `VERSION`: número canónico de la aplicación.
+- `actualizacion_supabase_dashboard_v7.sql`: copia de la última migración histórica. **No volver a ejecutarla por el simple cambio de número de versión**.
 
 ## Instalación
-1. Ejecuta `actualizacion_supabase_dashboard_v7.sql` en Supabase SQL Editor. No borra registros.
-2. Sube el contenido del ZIP a la raíz del repositorio GitHub Pages, conservando `js/` y `css/`.
-3. Recarga la web con `?v=19`.
+Si ya está instalada la antigua v1.9, basta publicar el código de esta entrega para unificar las etiquetas de versión. No se requiere migración SQL adicional. Se mantienen las rutas `js/` y `css/`. Para refrescar la caché puede abrirse la URL con `?v=1.0.0`.
 
-## Panel de administración
-- Gestiones: solicitudes pendientes, alumnos autorizados sin bancos, bancos sin publicar. Los contadores abren secciones reales.
-- Actividad últimos siete días: alumnos con respuestas, tests finalizados, respuestas y respuestas en repaso.
-- Alertas históricas: temas con menor porcentaje de acierto (mínimo 10 respuestas) y preguntas con más errores (mínimo 5 respuestas). Al pulsar se abre el informe del banco.
-- Los indicadores académicos excluyen usuarios administradores. Las pruebas de laboratorio no se guardan.
-- Si falta la migración, los contadores de gestión funcionan y se muestra un aviso en lugar de inventar estadísticas.
+## Política de versiones
+A partir de ahora se usa `MAJOR.MINOR.PATCH`:
+- `PATCH`: corrección compatible o cambio de presentación sin nueva función.
+- `MINOR`: nueva funcionalidad compatible.
+- `MAJOR`: cambio incompatible que requiera adaptación de usuarios, API o datos.
+
+Cada nueva entrega debe actualizar `VERSION`, `CHANGELOG.md`, la documentación afectada y los parámetros de caché. Las migraciones SQL llevan una numeración independiente.
