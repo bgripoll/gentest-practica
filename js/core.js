@@ -1,6 +1,6 @@
 'use strict';
 const SUPABASE_PROJECT_URL='https://iklafanogguxcchqkuyw.supabase.co';const KEY='sb_publishable_8KlKEeNUCXStcFlL4Ei6-A_j7glL1eh';
-const $=id=>document.getElementById(id);const sections=['auth','register','pending','home','quiz','results','admin'];let db,user,profile,bank=[],history=[],progress=[],studentBanks=[],sessionsHistory=[],session=null,items=[],pos=0,answered=false,busy=false,allBanks=[],adminUsers=[],preview=false,currentMode='practice';
+const $=id=>document.getElementById(id);const sections=['auth','register','pending','home','quiz','results','admin'];let db,user,profile,bank=[],history=[],progress=[],studentBanks=[],sessionsHistory=[],session=null,items=[],pos=0,answered=false,busy=false,allBanks=[],adminUsers=[],preview=false,adminDemo=false,currentMode='practice';
 const show=id=>{sections.forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo({top:0,behavior:'instant'})};
 const message=(txt,error=false)=>{const el=$('message');el.textContent=txt;el.className='msg'+(error?' error':'');el.classList.toggle('hidden',!txt)};
 const safe=val=>String(val??'').trim();const norm=val=>safe(val).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');

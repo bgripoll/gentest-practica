@@ -6,7 +6,7 @@ async function loadAdmin(){
  const stats=requireOk(await db.rpc('admin_user_stats'));
  const statsMap=new Map(stats.map(x=>[x.user_id,x]));
  $('summaryContent').textContent=`Usuarios: ${adminUsers.length} · Pendientes: ${adminUsers.filter(x=>!x.approved).length} · Bancos: ${allBanks.length} · Respuestas: ${stats.reduce((n,x)=>n+Number(x.answers),0)}`;
- for(const id of ['importBank','labBank','studentBank']){const sel=$(id);sel.replaceChildren();allBanks.forEach(b=>{const opt=new Option(b.name+(b.published?' · publicado':' · borrador'),b.id);sel.add(opt)})}
+ for(const id of ['importBank','labBank']){const sel=$(id);sel.replaceChildren();allBanks.forEach(b=>{const opt=new Option(b.name+(b.published?' · publicado':' · borrador'),b.id);sel.add(opt)})}
  const ubox=$('userList');ubox.replaceChildren();
  let lastLogins=new Map();
  try { const loginRows=requireOk(await ensureDb().rpc('admin_user_last_signins'));lastLogins=new Map((loginRows||[]).map(r=>[r.user_id,r.last_sign_in_at])); }

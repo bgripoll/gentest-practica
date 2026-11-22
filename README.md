@@ -1,5 +1,10 @@
-GenTest Practica v1.5 — listado de alumnos ordenado por nombre y apellidos, correo y último inicio de sesión; ficha por pestañas con botón de regreso. Ejecuta primero actualizacion_supabase_ultimo_acceso_v5.sql. La fecha mostrada es el último inicio de sesión de Supabase Auth, no la última actividad. Se requiere también el SQL v4 para los campos personales y estadísticas.
+# GenTest Practica modular v1.7
 
+- Elimina la pestaña redundante «Vista alumno» de administración.
+- Renombra «Ir a practicar» como «Acceder como alumno».
+- El administrador puede regresar con «Volver a administración» sin cerrar sesión.
+- **Modo demostración del administrador:** los test iniciados desde «Acceder como alumno» no escriben sesiones ni respuestas en Supabase, y no alteran las estadísticas.
+- «Pruebas» conserva el laboratorio independiente.
+- No requiere cambios SQL. Subir todos los archivos y carpetas conservando sus rutas.
 
-## v1.6
-Botón «Volver a administración» visible solo para administradores al entrar en «Ir a practicar». No requiere SQL.
+Pruebas recomendadas: iniciar sesión como administrador, acceder como alumno, completar un test, regresar al panel, ejecutar laboratorio y comprobar que las estadísticas no varían. Probar después el flujo normal con una cuenta de estudiante.
