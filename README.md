@@ -30,3 +30,7 @@ Es una **primera separación conservadora** del JavaScript original en scripts c
 Acceso, registro, aprobación de usuario, importación Excel, práctica por tema, repaso de errores, estadísticas, pruebas de administrador y cierre de sesión.
 
 **No almacenes claves privadas de Supabase en este repositorio.** La clave publicable de cliente ya existente permanece en el navegador; la seguridad depende de las políticas RLS de Supabase.
+
+
+## v1.4 Administración
+Ejecutar primero actualizacion_supabase_admin_v4.sql. Luego publicar todos los archivos. El correo es de solo lectura: modificar auth.users requiere un flujo seguro de administración. Las estadísticas por banco se obtienen con RPC restringida a administradores.
