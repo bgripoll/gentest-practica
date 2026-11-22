@@ -5,7 +5,7 @@ async function loadAdmin(){
  const access=requireOk(await ensureDb().from('user_bank_access').select('user_id,bank_id'));
  const stats=requireOk(await db.rpc('admin_user_stats'));
  const statsMap=new Map(stats.map(x=>[x.user_id,x]));
- $('summaryContent').textContent=`Usuarios: ${adminUsers.length} · Pendientes: ${adminUsers.filter(x=>!x.approved).length} · Bancos: ${allBanks.length} · Respuestas: ${stats.reduce((n,x)=>n+Number(x.answers),0)}`;
+ await loadDashboard();
  for(const id of ['importBank','labBank']){const sel=$(id);sel.replaceChildren();allBanks.forEach(b=>{const opt=new Option(b.name+(b.published?' · publicado':' · borrador'),b.id);sel.add(opt)})}
  const ubox=$('userList');ubox.replaceChildren();
  let lastLogins=new Map();
@@ -26,6 +26,8 @@ async function loadAdmin(){
   const when=adminEl('span',signIn?new Date(signIn).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short'}):'Sin registro','student-list-date');
   const status=adminEl('span',u.approved?'Activo':'Pendiente / bloqueado','student-list-status');
   row.append(name,mail,when,status);
+  row.dataset.userStatus=u.approved?'active':'pending';
+  row.dataset.userId=u.id;
   row.onclick=()=>openUserDetail(u);
   ubox.append(row);
  }
@@ -108,3 +110,52 @@ async function openBankReport(bankId,userId,title){
  for(const q of data.hardest||[]){const item=adminEl('div',undefined,'usercard');item.append(adminEl('strong',q.topic+' · '+q.wrong+' fallos de '+q.attempts+' respuestas'),adminEl('p',q.question,'mini'));pane.append(item)}
  pane.scrollIntoView({behavior:'smooth',block:'start'});
 }
+
+// Panel de control v1.9. Todas las métricas académicas proceden de una RPC protegida.
+async function loadDashboard(){
+ const root=$('summaryContent');if(!root)return;
+ root.replaceChildren();root.append(adminEl('p','Cargando indicadores…','muted'));
+ const students=adminUsers.filter(u=>u.role!=='admin');
+ const pending=students.filter(u=>!u.approved);
+ const access=requireOk(await ensureDb().from('user_bank_access').select('user_id,bank_id'));
+ const authorized=new Set(access.map(a=>a.user_id));
+ const withoutBanks=students.filter(u=>u.approved&&!authorized.has(u.id));
+ const drafts=allBanks.filter(b=>!b.published);
+ let academic=null,academicError=null;
+ try{academic=requireOk(await ensureDb().rpc('admin_dashboard_overview'));}catch(e){academicError=e;console.warn('Instala la migración SQL v7 para activar indicadores académicos.',e);}
+ root.replaceChildren();
+ const actions=adminEl('section',undefined,'dashboard-section');actions.append(adminEl('h3','Gestiones pendientes'));
+ const cards=adminEl('div',undefined,'dashboard-grid');
+ const tasks=[
+  {value:pending.length,label:'Altas pendientes',note:'Revisar solicitudes de acceso',go:()=>dashboardUsers('pending')},
+  {value:withoutBanks.length,label:'Alumnos sin bancos',note:'Autorizados sin bancos asignados',go:()=>dashboardUsers('no-bank',withoutBanks.map(u=>u.id))},
+  {value:drafts.length,label:'Bancos sin publicar',note:'Revisar antes de publicar',go:()=>dashboardBanks()},
+ ];
+ for(const t of tasks){const b=adminEl('button',undefined,'dashboard-tile');b.type='button';b.append(adminEl('strong',String(t.value)),adminEl('span',t.label),adminEl('small',t.note));b.onclick=t.go;cards.append(b)}actions.append(cards);root.append(actions);
+ const activity=adminEl('section',undefined,'dashboard-section');activity.append(adminEl('h3','Actividad de los últimos 7 días'));
+ if(academic){const metrics=adminEl('div',undefined,'dashboard-grid');for(const [value,label] of [[academic.active_students,'Alumnos activos'],[academic.completed_tests,'Tests finalizados'],[academic.answers,'Respuestas registradas'],[academic.reviews,'Respuestas en repaso']]){const c=adminEl('div',undefined,'dashboard-metric');c.append(adminEl('strong',String(value??0)),adminEl('span',label));metrics.append(c)}activity.append(metrics);activity.append(adminEl('p','Actividad de alumnos (no administradores). Los tests se cuentan al finalizar; los repasos se cuentan por respuesta.','muted small'));}
+ else{const warning=adminEl('div','Indicadores académicos no disponibles. Ejecuta la actualización SQL v7 en Supabase. Las gestiones administrativas siguen funcionando.','dashboard-warning');activity.append(warning)}root.append(activity);
+ const alerts=adminEl('section',undefined,'dashboard-section');alerts.append(adminEl('h3','Alertas académicas'));
+ if(academic){
+  const note=adminEl('p','Temas y preguntas con más fallos históricos. Se muestran temas con al menos 10 respuestas y preguntas con al menos 5; los porcentajes no son notas individuales.','muted small');alerts.append(note);
+  const layout=adminEl('div',undefined,'dashboard-alert-grid');
+  const topics=adminEl('div',undefined,'dashboard-alert-panel');topics.append(adminEl('h4','Temas con menor acierto'));
+  if(!(academic.weak_topics||[]).length)topics.append(adminEl('p','Todavía no hay datos suficientes.','muted'));
+  for(const t of academic.weak_topics||[]){const r=adminEl('button',undefined,'dashboard-alert-row');r.type='button';r.append(adminEl('span',(t.bank_name||'Banco')+' · '+(t.topic||'Sin tema')),adminEl('strong',Math.round(Number(t.accuracy||0))+' %'));r.onclick=()=>dashboardBankReport(t.bank_id,t.bank_name);topics.append(r)}
+  const questions=adminEl('div',undefined,'dashboard-alert-panel');questions.append(adminEl('h4','Preguntas con más errores'));
+  if(!(academic.hard_questions||[]).length)questions.append(adminEl('p','Todavía no hay datos suficientes.','muted'));
+  for(const q of academic.hard_questions||[]){const r=adminEl('button',undefined,'dashboard-alert-row');r.type='button';const left=adminEl('span',undefined);left.append(adminEl('b',(q.bank_name||'Banco')+' · '+(q.topic||'Sin tema')),adminEl('small',String(q.question||'').slice(0,130)));r.append(left,adminEl('strong',q.wrong+' fallos / '+q.attempts+' respuestas'));r.onclick=()=>dashboardBankReport(q.bank_id,q.bank_name);questions.append(r)}
+  layout.append(topics,questions);alerts.append(layout);
+ }else alerts.append(adminEl('p','Disponibles tras instalar la actualización SQL v7.','muted'));
+ root.append(alerts);
+}
+function dashboardUsers(filter,ids=[]){
+ adminTab('users');showUserList();
+ const visible=new Set(ids);
+ document.querySelectorAll('#userList .student-list-row').forEach(row=>{row.classList.toggle('hidden',filter==='pending'?row.dataset.userStatus!=='pending':filter==='no-bank'?!visible.has(row.dataset.userId):false)});
+ let label=$('dashboardUserFilter');if(!label){label=adminEl('div',undefined,'dashboard-filter');label.id='dashboardUserFilter';$('userListView').prepend(label)}label.replaceChildren();
+ label.append(adminEl('span',filter==='pending'?'Mostrando solicitudes pendientes':'Mostrando alumnos autorizados sin bancos'));
+ const reset=adminEl('button','Mostrar todos','secondary');reset.type='button';reset.onclick=()=>{document.querySelectorAll('#userList .student-list-row').forEach(r=>r.classList.remove('hidden'));label.remove()};label.append(reset);
+}
+function dashboardBanks(){adminTab('banks');$('bankList').scrollIntoView({behavior:'smooth',block:'start'});}
+function dashboardBankReport(bankId,bankName){adminTab('banks');action(()=>openBankReport(bankId,null,bankName||'Banco'));}

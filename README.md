@@ -1,15 +1,15 @@
-# GenTest Practica modular v1.7
+# GenTest Practica · v1.9 Centro de control
 
-- Elimina la pestaña redundante «Vista alumno» de administración.
-- Renombra «Ir a practicar» como «Acceder como alumno».
-- El administrador puede regresar con «Volver a administración» sin cerrar sesión.
-- **Modo demostración del administrador:** los test iniciados desde «Acceder como alumno» no escriben sesiones ni respuestas en Supabase, y no alteran las estadísticas.
-- «Pruebas» conserva el laboratorio independiente.
-- No requiere cambios SQL. Subir todos los archivos y carpetas conservando sus rutas.
+Actualización modular desde v1.8. Conserva el registro obligatorio, usuarios, bancos, pruebas, modo alumno y repasos.
 
-Pruebas recomendadas: iniciar sesión como administrador, acceder como alumno, completar un test, regresar al panel, ejecutar laboratorio y comprobar que las estadísticas no varían. Probar después el flujo normal con una cuenta de estudiante.
+## Instalación
+1. Ejecuta `actualizacion_supabase_dashboard_v7.sql` en Supabase SQL Editor. No borra registros.
+2. Sube el contenido del ZIP a la raíz del repositorio GitHub Pages, conservando `js/` y `css/`.
+3. Recarga la web con `?v=19`.
 
-
-## v1.8 — Registro completo
-
-El registro exige nombre, apellidos, DNI/NIE, fecha de nacimiento, teléfono, correo, contraseña y confirmación. El correo sigue siendo de solo lectura en la ficha de administración. Ejecutar primero el SQL v6 para que el disparador de altas copie los datos a `profiles`. La validación de formato del DNI/NIE no verifica la letra de control.
+## Panel de administración
+- Gestiones: solicitudes pendientes, alumnos autorizados sin bancos, bancos sin publicar. Los contadores abren secciones reales.
+- Actividad últimos siete días: alumnos con respuestas, tests finalizados, respuestas y respuestas en repaso.
+- Alertas históricas: temas con menor porcentaje de acierto (mínimo 10 respuestas) y preguntas con más errores (mínimo 5 respuestas). Al pulsar se abre el informe del banco.
+- Los indicadores académicos excluyen usuarios administradores. Las pruebas de laboratorio no se guardan.
+- Si falta la migración, los contadores de gestión funcionan y se muestra un aviso en lugar de inventar estadísticas.
