@@ -1,5 +1,5 @@
 'use strict';
-const URL='https://iklafanogguxcchqkuyw.supabase.co';const KEY='sb_publishable_8KlKEeNUCXStcFlL4Ei6-A_j7glL1eh';
+const SUPABASE_PROJECT_URL='https://iklafanogguxcchqkuyw.supabase.co';const KEY='sb_publishable_8KlKEeNUCXStcFlL4Ei6-A_j7glL1eh';
 const $=id=>document.getElementById(id);const sections=['auth','register','pending','home','quiz','results','admin'];let db,user,profile,bank=[],history=[],progress=[],studentBanks=[],sessionsHistory=[],session=null,items=[],pos=0,answered=false,busy=false,allBanks=[],adminUsers=[],preview=false,currentMode='practice';
 const show=id=>{sections.forEach(x=>$(x).classList.toggle('hidden',x!==id));window.scrollTo({top:0,behavior:'instant'})};
 const message=(txt,error=false)=>{const el=$('message');el.textContent=txt;el.className='msg'+(error?' error':'');el.classList.toggle('hidden',!txt)};
