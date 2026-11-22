@@ -8,3 +8,8 @@
 - No requiere cambios SQL. Subir todos los archivos y carpetas conservando sus rutas.
 
 Pruebas recomendadas: iniciar sesión como administrador, acceder como alumno, completar un test, regresar al panel, ejecutar laboratorio y comprobar que las estadísticas no varían. Probar después el flujo normal con una cuenta de estudiante.
+
+
+## v1.8 — Registro completo
+
+El registro exige nombre, apellidos, DNI/NIE, fecha de nacimiento, teléfono, correo, contraseña y confirmación. El correo sigue siendo de solo lectura en la ficha de administración. Ejecutar primero el SQL v6 para que el disparador de altas copie los datos a `profiles`. La validación de formato del DNI/NIE no verifica la letra de control.
